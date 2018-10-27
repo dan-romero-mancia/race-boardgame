@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://UI/Main.gd" type="Script" id=1]
+[ext_resource path="res://UI/MainMenu.tscn" type="PackedScene" id=2]
+[ext_resource path="res://UI/ConnectMenu.tscn" type="PackedScene" id=3]
+[ext_resource path="res://UI/JoinMenu.tscn" type="PackedScene" id=4]
+
+[node name="Main" type="Node" index="0"]
+
+script = ExtResource( 1 )
+
+[node name="MainMenu" parent="." index="0" instance=ExtResource( 2 )]
+
+[node name="ConnectPanel" parent="." index="1" instance=ExtResource( 3 )]
+
+visible = false
+margin_left = -381.0
+margin_top = -212.0
+margin_right = 403.0
+margin_bottom = 201.0
+
+[node name="JoinPanel" parent="." index="2" instance=ExtResource( 4 )]
+
+margin_left = 262.0
+margin_top = 147.0
+margin_right = 1027.0
+margin_bottom = 427.0
+
+[connection signal="connect_menu" from="MainMenu" to="." method="_on_MainMenu_connect_menu"]
+
+[connection signal="join_button" from="ConnectPanel" to="." method="_on_ConnectPanel_join_button"]
+
+[connection signal="return_button" from="ConnectPanel" to="." method="_on_ConnectPanel_return_button"]
+
+[connection signal="return_button" from="JoinPanel" to="." method="_on_JoinPanel_return_button"]
+
+
