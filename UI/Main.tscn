@@ -1,11 +1,13 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://UI/Main.gd" type="Script" id=1]
 [ext_resource path="res://UI/MainMenu.tscn" type="PackedScene" id=2]
 [ext_resource path="res://UI/ConnectMenu.tscn" type="PackedScene" id=3]
 [ext_resource path="res://UI/JoinMenu.tscn" type="PackedScene" id=4]
+[ext_resource path="res://UI/CreateMenu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://UI/Lobby.tscn" type="PackedScene" id=6]
 
-[node name="Main" type="Node" index="0"]
+[node name="Main" type="Node"]
 
 script = ExtResource( 1 )
 
@@ -21,17 +23,38 @@ margin_bottom = 201.0
 
 [node name="JoinPanel" parent="." index="2" instance=ExtResource( 4 )]
 
-margin_left = 262.0
-margin_top = 147.0
-margin_right = 1027.0
-margin_bottom = 427.0
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -382.5
+margin_top = -140.0
+margin_right = 382.5
+margin_bottom = 140.0
+
+[node name="CreatePanel" parent="." index="3" instance=ExtResource( 5 )]
+
+visible = false
+
+[node name="LobbyPanel" parent="." index="4" instance=ExtResource( 6 )]
+
+visible = false
 
 [connection signal="connect_menu" from="MainMenu" to="." method="_on_MainMenu_connect_menu"]
+
+[connection signal="connect_button" from="ConnectPanel" to="." method="_on_ConnectPanel_connect_button"]
 
 [connection signal="join_button" from="ConnectPanel" to="." method="_on_ConnectPanel_join_button"]
 
 [connection signal="return_button" from="ConnectPanel" to="." method="_on_ConnectPanel_return_button"]
 
+[connection signal="connect_button" from="JoinPanel" to="." method="_on_JoinPanel_connect_button"]
+
 [connection signal="return_button" from="JoinPanel" to="." method="_on_JoinPanel_return_button"]
+
+[connection signal="connect_button" from="CreatePanel" to="." method="_on_CreatePanel_connect_button"]
+
+[connection signal="return_button" from="CreatePanel" to="." method="_on_CreatePanel_return_button"]
 
 

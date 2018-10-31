@@ -14,6 +14,10 @@ config/name="Camel Race"
 run/main_scene="res://UI/Main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+globals="*res://globals.gd"
+
 [display]
 
 window/size/width=1280
