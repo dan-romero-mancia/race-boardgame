@@ -104,3 +104,7 @@ func is_lobby_full():
 	if globals.players.size() >= 8:
 		return true
 	return false
+
+func _on_LobbyPanel_disconnected():
+	$LobbyPanel.hide()
+	$ConnectPanel.show()

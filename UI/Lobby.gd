@@ -1,5 +1,9 @@
 extends Panel
 
+signal disconnected
+
+var ready_players = []
+
 func _ready():
 	pass
 
@@ -33,3 +37,32 @@ remote func set_player_number(num, name):
 		if player.player_name == name:
 			print("Setting player number " + str(num) + " for player " + player.player_name)
 			player.player_number = num
+	
+	pre_config_game()
+
+# When the Exit Game button is pressed, disconnect from the server.
+func _on_ExitGame_pressed():
+	if get_tree().is_network_server():
+		for player in globals.players:
+			if player.network_id != 1:
+				get_tree().disconnect_network_peer(player.network_id)
+				rpc_id(player.newtork_id, "disconnect_lobby")
+		
+	get_tree().set_network_peer(null)
+	emit_signal("disconnected")
+
+remote func disconnect_lobby():
+	print("Disconnected from the lobby")
+	get_tree().set_network_peer(null)
+	emit_signal("disconnected")
+	
+func pre_config_game():
+	
+	rpc_id(1, "done_preconfig", get_tree().get_network_unique_id())
+	
+remote func done_preconfig(id):
+	self.ready_players.append(id)
+	
+	if self.ready_players.size() == globals.players.size()-1:
+		# Configure server game here
+		pass

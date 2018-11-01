@@ -116,4 +116,6 @@ max_lines_visible = -1
 
 [connection signal="pressed" from="StartButton" to="." method="_on_StartButton_pressed"]
 
+[connection signal="pressed" from="ExitGame" to="." method="_on_ExitGame_pressed"]
+
 
