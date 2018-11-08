@@ -4,6 +4,14 @@ extends Node
 
 const PORT = 4242
 
+enum RACER {
+	blue,
+	green,
+	orange,
+	yellow,
+	white
+}
+
 var players = []
 var player_name = ""
 
@@ -29,3 +37,13 @@ func remove_player(id):
 			removed_player = player
 	
 	players.erase(removed_player)
+	
+func get_player(name):
+	for p in players:
+		if p.player_name == name:
+			return p
+			
+func get_player_index(player_name):
+	for i in range(players.size()):
+		if player_name == players[i].player_name:
+			return i
