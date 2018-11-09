@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://Game/Board.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/RPGTileSet.tres" type="TileSet" id=2]
@@ -10,11 +10,20 @@
 [ext_resource path="res://Sprites/Rect.png" type="Texture" id=8]
 [ext_resource path="res://Sprites/BackgroundObjects/sign.png" type="Texture" id=9]
 [ext_resource path="res://Sprites/box.png" type="Texture" id=10]
-[ext_resource path="res://Sprites/Racers/Blue.png" type="Texture" id=11]
-[ext_resource path="res://Sprites/Racers/Green.png" type="Texture" id=12]
-[ext_resource path="res://Sprites/Racers/Orange.png" type="Texture" id=13]
-[ext_resource path="res://Sprites/Racers/Yellow.png" type="Texture" id=14]
-[ext_resource path="res://Sprites/Racers/White.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/plus1Tile.png" type="Texture" id=11]
+[ext_resource path="res://Sprites/min1Tile.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/Racers/Blue.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/Racers/Green.png" type="Texture" id=14]
+[ext_resource path="res://Sprites/Racers/Orange.png" type="Texture" id=15]
+[ext_resource path="res://Sprites/Racers/Yellow.png" type="Texture" id=16]
+[ext_resource path="res://Sprites/Racers/White.png" type="Texture" id=17]
+
+[sub_resource type="Curve2D" id=1]
+
+bake_interval = 5.0
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 609.412, 362.121, 0, 0, 0, 0, 607.934, 525.195, 0, 0, 0, 0, 608.615, 637.676, 0, 0, 0, 0, 477.755, 638.339, 0, 0, 0, 0, 341.754, 637.676, 0, 0, 0, 0, 211.889, 637.676, 0, 0, 0, 0, 86.5024, 639.003, 0, 0, 0, 0, 86.5582, 470.601, 0, 0, 0, 0, 85.9595, 355.535, 0, 0, 0, 0, 86.1452, 223.171, 0, 0, 0, 0, 88.3545, 127.639, 0, 0, 0, 0, 229.058, 129.435, 0, 0, 0, 0, 345.812, 128.836, 0, 0, 0, 0, 484.12, 128.238, 0, 0, 0, 0, 607.46, 128.238, 0, 0, 0, 0, 607.423, 215.852, 0, 0, 0, 0, 609.449, 316.26, 0, 0, 0, 0, 609.449, 362.036 )
+}
 
 [node name="Board" type="Node" index="0"]
 
@@ -118,7 +127,34 @@ position = Vector2( 606.763, 479.411 )
 texture = ExtResource( 8 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Label2" type="Label" parent="Space2" index="0"]
+[node name="SpaceButton2" type="Button" parent="Space2" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -65.0
+margin_right = 64.0
+margin_bottom = 63.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label2" type="Label" parent="Space2" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -146,7 +182,34 @@ position = Vector2( 606.763, 607.411 )
 texture = ExtResource( 8 )
 _sections_unfolded = [ "Transform" ]
 
-[node name="Label3" type="Label" parent="Space3" index="0"]
+[node name="SpaceButton3" type="Button" parent="Space3" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label3" type="Label" parent="Space3" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -173,7 +236,34 @@ editor/display_folded = true
 position = Vector2( 479.763, 607.411 )
 texture = ExtResource( 8 )
 
-[node name="Label4" type="Label" parent="Space4" index="0"]
+[node name="SpaceButton4" type="Button" parent="Space4" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -65.0
+margin_right = 64.0
+margin_bottom = 63.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label4" type="Label" parent="Space4" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -200,7 +290,34 @@ editor/display_folded = true
 position = Vector2( 351.763, 607.411 )
 texture = ExtResource( 8 )
 
-[node name="Label5" type="Label" parent="Space5" index="0"]
+[node name="SpaceButton5" type="Button" parent="Space5" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label5" type="Label" parent="Space5" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -227,7 +344,34 @@ editor/display_folded = true
 position = Vector2( 223.763, 607.411 )
 texture = ExtResource( 8 )
 
-[node name="Label6" type="Label" parent="Space6" index="0"]
+[node name="SpaceButton6" type="Button" parent="Space6" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -63.0
+margin_right = 64.0
+margin_bottom = 65.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label6" type="Label" parent="Space6" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -254,7 +398,34 @@ editor/display_folded = true
 position = Vector2( 96.763, 607.411 )
 texture = ExtResource( 8 )
 
-[node name="Label7" type="Label" parent="Space7" index="0"]
+[node name="SpaceButton7" type="Button" parent="Space7" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -63.0
+margin_right = 64.0
+margin_bottom = 65.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label7" type="Label" parent="Space7" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -281,7 +452,34 @@ editor/display_folded = true
 position = Vector2( 96.763, 480.411 )
 texture = ExtResource( 8 )
 
-[node name="Label8" type="Label" parent="Space8" index="0"]
+[node name="SpaceButton8" type="Button" parent="Space8" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label8" type="Label" parent="Space8" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -308,7 +506,34 @@ editor/display_folded = true
 position = Vector2( 96.763, 352.411 )
 texture = ExtResource( 8 )
 
-[node name="Label9" type="Label" parent="Space9" index="0"]
+[node name="SpaceButton9" type="Button" parent="Space9" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label9" type="Label" parent="Space9" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -335,7 +560,34 @@ editor/display_folded = true
 position = Vector2( 96.763, 224.411 )
 texture = ExtResource( 8 )
 
-[node name="Label10" type="Label" parent="Space10" index="0"]
+[node name="SpaceButton10" type="Button" parent="Space10" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label10" type="Label" parent="Space10" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -362,7 +614,34 @@ editor/display_folded = true
 position = Vector2( 96.763, 97.4108 )
 texture = ExtResource( 8 )
 
-[node name="Label11" type="Label" parent="Space11" index="0"]
+[node name="SpaceButton11" type="Button" parent="Space11" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label11" type="Label" parent="Space11" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -389,7 +668,34 @@ editor/display_folded = true
 position = Vector2( 224.763, 96.4108 )
 texture = ExtResource( 8 )
 
-[node name="Label12" type="Label" parent="Space12" index="0"]
+[node name="SpaceButton12" type="Button" parent="Space12" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -63.0
+margin_right = 64.0
+margin_bottom = 65.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label12" type="Label" parent="Space12" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -416,7 +722,34 @@ editor/display_folded = true
 position = Vector2( 352.763, 96.4108 )
 texture = ExtResource( 8 )
 
-[node name="Label13" type="Label" parent="Space13" index="0"]
+[node name="SpaceButton13" type="Button" parent="Space13" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -63.0
+margin_right = 64.0
+margin_bottom = 65.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label13" type="Label" parent="Space13" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -443,7 +776,34 @@ editor/display_folded = true
 position = Vector2( 480.001, 95.9706 )
 texture = ExtResource( 8 )
 
-[node name="Label14" type="Label" parent="Space14" index="0"]
+[node name="SpaceButton14" type="Button" parent="Space14" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -63.0
+margin_right = 64.0
+margin_bottom = 65.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label14" type="Label" parent="Space14" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -470,7 +830,34 @@ editor/display_folded = true
 position = Vector2( 607.001, 96.4108 )
 texture = ExtResource( 8 )
 
-[node name="Label15" type="Label" parent="Space15" index="0"]
+[node name="SpaceButton15" type="Button" parent="Space15" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label15" type="Label" parent="Space15" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -493,11 +880,37 @@ max_lines_visible = -1
 
 [node name="Space16" type="Sprite" parent="." index="23"]
 
-editor/display_folded = true
 position = Vector2( 607.001, 224.411 )
 texture = ExtResource( 8 )
 
-[node name="Label16" type="Label" parent="Space16" index="0"]
+[node name="SpaceButton16" type="Button" parent="Space16" index="0" groups=[
+"DesertTile",
+]]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = -64.0
+margin_top = -64.0
+margin_right = 64.0
+margin_bottom = 64.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = false
+enabled_focus_mode = 2
+shortcut = null
+group = null
+flat = true
+align = 1
+_sections_unfolded = [ "Margin", "Rect" ]
+
+[node name="Label16" type="Label" parent="Space16" index="1"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -1013,10 +1426,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 884.588
-margin_top = 110.053
-margin_right = 1008.59
-margin_bottom = 233.053
+margin_left = 885.0
+margin_top = 48.0
+margin_right = 1009.0
+margin_bottom = 170.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -1038,10 +1451,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 885.033
-margin_top = 447.157
-margin_right = 1009.03
-margin_bottom = 570.157
+margin_left = 885.0
+margin_top = 366.0
+margin_right = 1013.0
+margin_bottom = 494.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -1056,6 +1469,7 @@ group = null
 text = "Bet Winner"
 flat = false
 align = 1
+_sections_unfolded = [ "Rect" ]
 
 [node name="MoveButton" type="Button" parent="." index="33"]
 
@@ -1063,10 +1477,10 @@ anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 883.0
-margin_top = 271.0
-margin_right = 1011.0
-margin_bottom = 399.0
+margin_left = 886.0
+margin_top = 205.0
+margin_right = 1014.0
+margin_bottom = 333.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -1156,51 +1570,16 @@ icon_mode = 1
 fixed_icon_size = Vector2( 0, 0 )
 _sections_unfolded = [ "Rect" ]
 
-[node name="BlueRacer" type="Sprite" parent="." index="36"]
-
-position = Vector2( 586.808, 312.723 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 11 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="GreenRacer" type="Sprite" parent="." index="37"]
-
-position = Vector2( 627.822, 312.972 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 12 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="OrangeRacer" type="Sprite" parent="." index="38"]
-
-position = Vector2( 564.965, 360.097 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 13 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="YellowRacer" type="Sprite" parent="." index="39"]
-
-position = Vector2( 606.896, 360.097 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 14 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="WhiteRacer" type="Sprite" parent="." index="40"]
-
-position = Vector2( 648.897, 360.194 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 15 )
-_sections_unfolded = [ "Transform" ]
-
-[node name="DesertTileButton" type="Button" parent="." index="41"]
+[node name="DesertTileButton" type="Button" parent="." index="36"]
 
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_left = 883.0
-margin_top = 587.0
-margin_right = 1010.0
-margin_bottom = 705.0
+margin_left = 886.0
+margin_top = 528.0
+margin_right = 1014.0
+margin_bottom = 656.0
 rect_pivot_offset = Vector2( 0, 0 )
 rect_clip_content = false
 focus_mode = 2
@@ -1208,7 +1587,7 @@ mouse_filter = 0
 mouse_default_cursor_shape = 0
 size_flags_horizontal = 1
 size_flags_vertical = 1
-toggle_mode = false
+toggle_mode = true
 enabled_focus_mode = 2
 shortcut = null
 group = null
@@ -1216,7 +1595,7 @@ text = "Place Desert Tile"
 flat = false
 align = 1
 
-[node name="Tween" type="Tween" parent="." index="42"]
+[node name="Tween" type="Tween" parent="." index="37"]
 
 repeat = false
 playback_process_mode = 1
@@ -1224,6 +1603,132 @@ playback_speed = 1.0
 playback/active = false
 playback/repeat = false
 playback/speed = 1.0
+
+[node name="DesertTileValueButton" type="TextureButton" parent="." index="38"]
+
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 915.0
+margin_top = 670.0
+margin_right = 984.0
+margin_bottom = 704.0
+rect_pivot_offset = Vector2( 0, 0 )
+rect_clip_content = false
+focus_mode = 2
+mouse_filter = 0
+mouse_default_cursor_shape = 0
+size_flags_horizontal = 1
+size_flags_vertical = 1
+toggle_mode = true
+enabled_focus_mode = 2
+shortcut = null
+group = null
+texture_normal = ExtResource( 11 )
+texture_pressed = ExtResource( 12 )
+expand = true
+_sections_unfolded = [ "Textures" ]
+
+[node name="Path" type="Path2D" parent="." index="39"]
+
+self_modulate = Color( 0.5, 0.6, 1, 0.7 )
+curve = SubResource( 1 )
+
+[node name="BlueFollow" type="PathFollow2D" parent="Path" index="0"]
+
+position = Vector2( 609.412, 362.121 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = false
+lookahead = 4.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="BlueRacer" type="Sprite" parent="Path/BlueFollow" index="0"]
+
+position = Vector2( 0.0513477, 0.946892 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 13 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="GreenFollow" type="PathFollow2D" parent="Path" index="1"]
+
+position = Vector2( 609.412, 362.121 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="GreenRacer" type="Sprite" parent="Path/GreenFollow" index="0"]
+
+position = Vector2( 0.303497, -0.237916 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 14 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="OrangeFollow" type="PathFollow2D" parent="Path" index="2"]
+
+position = Vector2( 609.412, 362.121 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="OrangeRacer" type="Sprite" parent="Path/OrangeFollow" index="0"]
+
+position = Vector2( -0.0204372, -1.07197 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 15 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="YellowFollow" type="PathFollow2D" parent="Path" index="3"]
+
+position = Vector2( 609.412, 362.121 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="YellowRacer" type="Sprite" parent="Path/YellowFollow" index="0"]
+
+position = Vector2( 2.81057, -0.0167134 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 16 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="WhiteFollow" type="PathFollow2D" parent="Path" index="4"]
+
+position = Vector2( 609.972, 359.914 )
+offset = 0.0
+h_offset = 0.0
+v_offset = 0.0
+rotate = false
+cubic_interp = true
+loop = true
+lookahead = 4.0
+_sections_unfolded = [ "Transform" ]
+
+[node name="WhiteRacer" type="Sprite" parent="Path/WhiteFollow" index="0"]
+
+position = Vector2( -0.279724, 1.16418 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 17 )
+_sections_unfolded = [ "Transform" ]
 
 [connection signal="pressed" from="BlueSprite/BlueBettingButton" to="." method="_on_BlueBettingButton_pressed"]
 
@@ -1236,5 +1741,7 @@ playback/speed = 1.0
 [connection signal="pressed" from="WhiteSprite/WhiteBettingButton" to="." method="_on_WhiteBettingButton_pressed"]
 
 [connection signal="pressed" from="MoveButton" to="." method="_on_MoveButton_pressed"]
+
+[connection signal="toggled" from="DesertTileButton" to="." method="_on_DesertTileButton_toggled"]
 
 

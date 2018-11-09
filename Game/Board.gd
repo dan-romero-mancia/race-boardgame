@@ -1,8 +1,14 @@
 extends Node
 
+class DesertTile:
+	var player
+	var location # Tile number on the track
+	var value # Either -1 or +1
+
 const TILE_SIZE = 128
 const MAX_TILES = 16
 const RACER_SIZE = 32
+const PATH_SPACE = 64
 
 enum RACER {
 	blue,
@@ -48,6 +54,10 @@ var player_turn_index = 0 # Used by the server machine to keep track of turns.
 
 var racer_positions = []
 var track_tiles = []
+
+var choose_desert_tile = false
+var can_place_tile = true
+var desert_tiles_on_board = []
 
 func _ready():
 	# Initialize betting cards
@@ -117,8 +127,14 @@ func _ready():
 	self.dice = [RACER.blue, RACER.green, RACER.orange, RACER.yellow, RACER.white]
 	self.racer_positions = [1, 1, 1, 1, 1]
 	
+	# Initialize the list of track tiles
 	for i in range(16):
 		self.track_tiles.append([])
+	
+	var button_num = 2 # Start at 2 because Space #1 cannot have any desert tiles on it
+	for button in get_tree().get_nodes_in_group("DesertTile"):
+		button.connect("pressed", self, "_desert_tile_selected", [button, button_num])
+		button_num += 1
 
 func _on_BlueBettingButton_pressed():
 	if my_turn:
@@ -257,14 +273,13 @@ remote func set_betting_card_to_player(color, player_name):
 			else:
 				$WhiteSprite/WhiteBettingButton.disabled = true
 			add_message(player_name + " took the $" + str(card.amount) + " White betting card")
-	
 
 # Add a message to the message itemlist
 func add_message(text):
 	$MessageScrollBar/MessageList.add_item(text, null, true)
 
 # When the move button is pressed; add 1 to your move cards and move a racer to a new location
-# The racer is chosen randomly and is moved 1-3 spaces randomly
+# The racer is chosen randomly and is then moved 1-3 spaces randomly
 func _on_MoveButton_pressed():
 	if my_turn:
 		var player = globals.get_player(globals.player_name)
@@ -327,6 +342,7 @@ remote func move_racer(random_racer, spaces_optional):
 	
 	animate_movement(racers_to_move, self.racer_positions[random_racer])
 	## Check for Desert tiles here ##
+	check_desert_tiles(racers_to_move, self.racer_positions[random_racer])
 	
 	for r in racers_to_move:
 		self.track_tiles[self.racer_positions[r]].append(r)
@@ -336,6 +352,18 @@ remote func move_racer(random_racer, spaces_optional):
 	
 	add_message(racer_text.capitalize() + " moved " + str(spaces) + " space(s)")
 	return spaces
+
+func check_desert_tiles(racers, dest_space):
+	var value = 0
+	for tile in self.desert_tiles_on_board:
+		if tile.location == dest_space:
+			value = tile.value
+	
+	if value != 0:
+		for r in racers:
+			self.racer_positions[r] += value
+		print("Landed on Desert Tile")
+		animate_movement(racers, dest_space + value)
 
 # Animate the movement of a racer from a tile to another
 # If another racer is already on the destination tile, then stack the new ones on top
@@ -366,7 +394,14 @@ func animate_movement(racers, dest_space):
 		var new_x_pos = float(tile_position.x)
 		var new_y_pos = float(tile_position.y) + RACER_SIZE - (RACER_SIZE * track_tiles[dest_space].size())
 		var new_racer_position = Vector2(new_x_pos, new_y_pos)
-		tween.interpolate_property(racer_sprite, "position", racer_sprite.position, new_racer_position, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
+		
+		var follow_name = racer_color + "Follow"
+		var follow_node = get_node("Path/" + follow_name)
+		var new_offset = follow_node.unit_offset+(PATH_SPACE*(dest_space-1))/1000
+		## EDIT follow_node for correct offset when another player is on the same tile
+		
+		tween.interpolate_property(follow_node, "unit_offset", follow_node.unit_offset, new_offset, 1,Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
+		#tween.interpolate_property(racer_sprite, "position", racer_sprite.position, new_racer_position, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
 		tween.start()
 
 # Get the racer on a tile and any racers that are on top of it in one array
@@ -426,3 +461,60 @@ func signal_move_card_taken(player_name):
 	for p in globals.players:
 		if p.player_name != globals.player_name:
 			rpc_id(p.network_id, "update_player_move_cards", player_name)
+
+func _desert_tile_selected(button, button_num):
+	if my_turn and choose_desert_tile and can_place_tile:
+		if check_adjacent_desert_tiles(button_num):
+			var value
+			if $DesertTileValueButton.pressed:
+				value = -1
+			else:
+				value = 1
+				
+			place_desert_tile(globals.player_name, button_num, value)
+			can_place_tile = false
+			
+			signal_desert_tile_placed(globals.player_name, button_num, value)
+			send_next_player_turn()
+			$DesertTileButton.disabled = true
+		else:
+			add_message("You can't place a desert tile next to another")
+		$DesertTileButton.pressed = false
+	else:
+		add_message("You can't place a tile now")
+
+remote func place_desert_tile(player_name, tile_num, value):
+	var new_tile = DesertTile.new()
+	new_tile.player = player_name
+	new_tile.location = tile_num
+	new_tile.value = value
+	self.desert_tiles_on_board.append(new_tile)
+	
+	var space_button = get_node("Space" + str(tile_num) + "/SpaceButton" + str(tile_num))
+	space_button.text = player_name + str(value) + " Desert Tile"
+	add_message(player_name + " placed a Desert Tile")
+
+func _on_DesertTileButton_pressed():
+	if self.my_turn:
+		self.choose_desert_tile = !self.choose_desert_tile
+		if self.choose_desert_tile:
+			add_message("Choose a tile")
+		else:
+			print("Can't place")
+
+func _on_DesertTileButton_toggled(button_pressed):
+	self.choose_desert_tile = button_pressed
+
+# Check the adjacent tiles if there are any desert tiles
+# If there are no adjacent desert tiles return true
+func check_adjacent_desert_tiles(current_space):
+	var no_adjacent = true
+	for tile in self.desert_tiles_on_board:
+		if tile.location == current_space+1 or tile.location == current_space-1:
+			no_adjacent = false
+	return no_adjacent
+	
+func signal_desert_tile_placed(player_name, tile_num, value):
+	for p in globals.players:
+		if p.player_name != globals.player_name:
+			rpc_id(p.network_id, "place_desert_tile", player_name, tile_num, value)
