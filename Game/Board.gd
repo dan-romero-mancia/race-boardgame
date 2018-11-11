@@ -51,6 +51,7 @@ var dice
 
 var my_turn = false
 var player_turn_index = 0 # Used by the server machine to keep track of turns.
+var player_leg_turn = 0
 
 var racer_positions = []
 var track_tiles = []
@@ -299,13 +300,16 @@ func _on_MoveButton_pressed():
 		
 		dice.erase(random_racer)
 		var spaces_moved = move_racer(random_racer, -1)
-		
-		if dice.size() == 0:
-			pass ## End of leg here
-		my_turn = false
 		# Signal to other players that a racer has been moved
 		signal_racer_moved(random_racer, spaces_moved)
-		send_next_player_turn()
+		
+		my_turn = false
+		if dice.size() == 0:
+			end_of_leg()
+			signal_end_of_leg()
+			send_next_leg_player_turn()
+		else:
+			send_next_player_turn()
 
 # Move a racer a certain amount of spaces
 # If spaces_optional == -1, then get a random number from 1-3 and that will be the amount of spaces to move a racer
@@ -355,14 +359,20 @@ remote func move_racer(random_racer, spaces_optional):
 
 func check_desert_tiles(racers, dest_space):
 	var value = 0
+	var player_name
 	for tile in self.desert_tiles_on_board:
 		if tile.location == dest_space:
 			value = tile.value
+			player_name = tile.player
 	
 	if value != 0:
 		for r in racers:
 			self.racer_positions[r] += value
 		print("Landed on Desert Tile")
+		var player = globals.get_player(player_name)
+		player.money_amount += 1
+		var player_node = get_node("Players/" + str(player.network_id))
+		player_node.set_money_amount(player.money_amount)
 		animate_movement(racers, dest_space + value)
 
 # Animate the movement of a racer from a tile to another
@@ -389,11 +399,11 @@ func animate_movement(racers, dest_space):
 			RACER.white:
 				racer_color = "White"
 		
-		var racer_name = racer_color + "Racer"
-		var racer_sprite = get_node(racer_name)
-		var new_x_pos = float(tile_position.x)
-		var new_y_pos = float(tile_position.y) + RACER_SIZE - (RACER_SIZE * track_tiles[dest_space].size())
-		var new_racer_position = Vector2(new_x_pos, new_y_pos)
+#		var racer_name = racer_color + "Racer"
+#		var racer_sprite = get_node(racer_name)
+#		var new_x_pos = float(tile_position.x)
+#		var new_y_pos = float(tile_position.y) + RACER_SIZE - (RACER_SIZE * track_tiles[dest_space].size())
+#		var new_racer_position = Vector2(new_x_pos, new_y_pos)
 		
 		var follow_name = racer_color + "Follow"
 		var follow_node = get_node("Path/" + follow_name)
@@ -510,7 +520,7 @@ func _on_DesertTileButton_toggled(button_pressed):
 func check_adjacent_desert_tiles(current_space):
 	var no_adjacent = true
 	for tile in self.desert_tiles_on_board:
-		if tile.location == current_space+1 or tile.location == current_space-1:
+		if tile.location == current_space+1 or tile.location == current_space-1 or tile.location == current_space:
 			no_adjacent = false
 	return no_adjacent
 	
@@ -518,3 +528,100 @@ func signal_desert_tile_placed(player_name, tile_num, value):
 	for p in globals.players:
 		if p.player_name != globals.player_name:
 			rpc_id(p.network_id, "place_desert_tile", player_name, tile_num, value)
+
+# Begin end of leg phase. Calculate winnings and loses based on racers positions.
+# Give money to the the players based on what happened during the leg and update the Player nodes
+remote func end_of_leg():
+	print("End of Leg")
+	give_move_card_money()
+	give_betting_card_money() ## TODO Test
+	reset_leg()
+
+# Add the amount of move cards a player used during a leg to their money amount.
+# 1 Move Card = $1
+func give_move_card_money():
+	for p in globals.players:
+		p.money_amount += p.move_cards
+		
+func give_betting_card_money():
+	var racer_placements = determine_racer_placements()
+	
+	for p in globals.players:
+		for c in p.betting_cards:
+			var racer_index = racer_placements.find(c.color)
+			if racer_index == racer_placements.size()-1:
+				p.money_amount += c.amount
+			elif racer_index == racer_placements.size()-2:
+				p.money_amount += 1
+			else:
+				p.money_amount += -1
+				if p.money_amount < 0: # A player cannot have less than $0
+					p.money_amount = 0
+
+# Determine the placement for all racers. Return the racers placement starting from last place to first place
+func determine_racer_placements():
+	var racer_placements = []
+	
+	var racer_locations = remove_duplicates(self.racer_positions)
+	racer_locations.sort() # Sorts in natural order, so starts from last place tile
+	for l in racer_locations:
+		var racers_on_tile = self.track_tiles[l]
+		for r in racers_on_tile:
+			racer_placements.append(r)
+		
+	return racer_placements
+
+# Create a new array from a given array with any duplicates removed
+func remove_duplicates(array):
+	var arr_no_duplicates = []
+	for i in range(array.size()):
+		if not array[i] in arr_no_duplicates:
+			arr_no_duplicates.append(array[i])
+		
+	return arr_no_duplicates
+
+# Reset all board and player variables that are used for a leg of the race
+func reset_leg():
+	for p in globals.players:
+		p.reset_leg()
+	
+	self.blue_bet_pile = [blue_bet_five, blue_bet_three, blue_bet_two]
+	self.green_bet_pile = [green_bet_five, green_bet_three, green_bet_two]
+	self.orange_bet_pile = [orange_bet_five, orange_bet_three, orange_bet_two]
+	self.yellow_bet_pile = [yellow_bet_five, yellow_bet_three, yellow_bet_two]
+	self.white_bet_pile = [white_bet_five, white_bet_three, white_bet_two]
+	
+	$BlueSprite/BlueWinningLabel.text = "1st Place: $5"
+	$GreenSprite/GreenWinningLabel.text = "1st Place: $5"
+	$OrangeSprite/OrangeWinningLabel.text = "1st Place: $5"
+	$YellowSprite/YellowWinningLabel.text = "1st Place: $5"
+	$WhiteSprite/WhiteWinningLabel.text = "1st Place: $5"
+	
+	self.dice = [RACER.blue, RACER.green, RACER.orange, RACER.yellow, RACER.white]
+	var desert_tiles_on_board = []
+
+# Signal to the other players that the current leg has finished
+func signal_end_of_leg():
+	for p in globals.players:
+		if p.player_name != globals.player_name:
+			rpc_id(p.network_id, "end_of_leg")
+
+# Send the player to start the next leg to all the other players
+func send_next_leg_player_turn():
+	self.player_leg_turn += 1
+	if self.player_leg_turn == globals.players.size()-1:
+		self.player_leg_turn = 0
+	
+	set_leg_player_turn(self.player_leg_turn)
+	
+	for p in globals.players:
+		if p.player_name != globals.player_name:
+			rpc_id(p.network_id, "set_leg_player_turn", self.player_leg_turn)
+
+remote func set_leg_player_turn(turn_num):
+	self.player_leg_turn = turn_num
+	self.my_turn = globals.players[turn_num].player_name == globals.player_name
+	if globals.players[turn_num].player_name == globals.player_name:
+		add_message("It's your turn now!")
+	else:
+		add_message("It's " + globals.players[player_turn_index].player_name + " turn now!")

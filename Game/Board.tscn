@@ -1499,7 +1499,6 @@ _sections_unfolded = [ "Rect" ]
 
 [node name="Players" type="Container" parent="." index="34"]
 
-editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -1713,7 +1712,7 @@ _sections_unfolded = [ "Transform" ]
 
 [node name="WhiteFollow" type="PathFollow2D" parent="Path" index="4"]
 
-position = Vector2( 609.972, 359.914 )
+position = Vector2( 609.412, 362.121 )
 offset = 0.0
 h_offset = 0.0
 v_offset = 0.0
