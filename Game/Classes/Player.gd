@@ -3,7 +3,7 @@
 var player_name
 var player_number
 var network_id
-var money_amount = 0
+var money_amount = 3
 var turn = false
 var betting_cards = []
 var move_cards = 0

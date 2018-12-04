@@ -15,3 +15,9 @@ func set_money_amount(amount):
 
 func set_player_number(number):
 	$NumberLabel.text = "Player " + str(number)
+
+func set_leg_starter(on):
+	if on:
+		$LegStarterSprite.show()
+	else:
+		$LegStarterSprite.hide()

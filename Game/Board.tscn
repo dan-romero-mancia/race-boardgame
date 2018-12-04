@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Game/Board.gd" type="Script" id=1]
 [ext_resource path="res://Sprites/RPGTileSet.tres" type="TileSet" id=2]
@@ -17,6 +17,7 @@
 [ext_resource path="res://Sprites/Racers/Orange.png" type="Texture" id=15]
 [ext_resource path="res://Sprites/Racers/Yellow.png" type="Texture" id=16]
 [ext_resource path="res://Sprites/Racers/White.png" type="Texture" id=17]
+[ext_resource path="res://Game/OverallPopup.tscn" type="PackedScene" id=18]
 
 [sub_resource type="Curve2D" id=1]
 
@@ -880,6 +881,7 @@ max_lines_visible = -1
 
 [node name="Space16" type="Sprite" parent="." index="23"]
 
+editor/display_folded = true
 position = Vector2( 607.001, 224.411 )
 texture = ExtResource( 8 )
 
@@ -1466,7 +1468,7 @@ toggle_mode = false
 enabled_focus_mode = 2
 shortcut = null
 group = null
-text = "Bet Winner"
+text = "Bet Loser"
 flat = false
 align = 1
 _sections_unfolded = [ "Rect" ]
@@ -1499,6 +1501,7 @@ _sections_unfolded = [ "Rect" ]
 
 [node name="Players" type="Container" parent="." index="34"]
 
+editor/display_folded = true
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -1521,31 +1524,7 @@ position = Vector2( 106.034, 272.664 )
 scale = Vector2( 1.4909, 7.98694 )
 texture = ExtResource( 10 )
 
-[node name="MessageScrollBar" type="VScrollBar" parent="." index="35"]
-
-editor/display_folded = true
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 12.0
-margin_bottom = 12.0
-rect_pivot_offset = Vector2( 0, 0 )
-rect_clip_content = false
-mouse_filter = 0
-mouse_default_cursor_shape = 0
-size_flags_horizontal = 0
-size_flags_vertical = 1
-min_value = 0.0
-max_value = 100.0
-step = 0.0
-page = 0.0
-value = 0.0
-exp_edit = false
-rounded = false
-custom_step = -1.0
-
-[node name="MessageList" type="ItemList" parent="MessageScrollBar" index="0"]
+[node name="MessageList" type="ItemList" parent="." index="35"]
 
 anchor_left = 0.0
 anchor_top = 0.0
@@ -1629,8 +1608,44 @@ texture_pressed = ExtResource( 12 )
 expand = true
 _sections_unfolded = [ "Textures" ]
 
-[node name="Path" type="Path2D" parent="." index="39"]
+[node name="BlueRacer" type="Sprite" parent="." index="39"]
 
+position = Vector2( 609.463, 363.068 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 13 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="GreenRacer" type="Sprite" parent="." index="40"]
+
+position = Vector2( 609.715, 361.883 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 14 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="OrangeRacer" type="Sprite" parent="." index="41"]
+
+position = Vector2( 609.392, 361.049 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 15 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="YellowRacer" type="Sprite" parent="." index="42"]
+
+position = Vector2( 612.223, 362.104 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 16 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="WhiteRacer" type="Sprite" parent="." index="43"]
+
+position = Vector2( 609.132, 363.285 )
+scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 17 )
+_sections_unfolded = [ "Transform" ]
+
+[node name="Path" type="Path2D" parent="." index="44"]
+
+editor/display_folded = true
 self_modulate = Color( 0.5, 0.6, 1, 0.7 )
 curve = SubResource( 1 )
 
@@ -1646,13 +1661,6 @@ loop = false
 lookahead = 4.0
 _sections_unfolded = [ "Transform" ]
 
-[node name="BlueRacer" type="Sprite" parent="Path/BlueFollow" index="0"]
-
-position = Vector2( 0.0513477, 0.946892 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 13 )
-_sections_unfolded = [ "Transform" ]
-
 [node name="GreenFollow" type="PathFollow2D" parent="Path" index="1"]
 
 position = Vector2( 609.412, 362.121 )
@@ -1663,13 +1671,6 @@ rotate = false
 cubic_interp = true
 loop = true
 lookahead = 4.0
-_sections_unfolded = [ "Transform" ]
-
-[node name="GreenRacer" type="Sprite" parent="Path/GreenFollow" index="0"]
-
-position = Vector2( 0.303497, -0.237916 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 14 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="OrangeFollow" type="PathFollow2D" parent="Path" index="2"]
@@ -1684,13 +1685,6 @@ loop = true
 lookahead = 4.0
 _sections_unfolded = [ "Transform" ]
 
-[node name="OrangeRacer" type="Sprite" parent="Path/OrangeFollow" index="0"]
-
-position = Vector2( -0.0204372, -1.07197 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 15 )
-_sections_unfolded = [ "Transform" ]
-
 [node name="YellowFollow" type="PathFollow2D" parent="Path" index="3"]
 
 position = Vector2( 609.412, 362.121 )
@@ -1701,13 +1695,6 @@ rotate = false
 cubic_interp = true
 loop = true
 lookahead = 4.0
-_sections_unfolded = [ "Transform" ]
-
-[node name="YellowRacer" type="Sprite" parent="Path/YellowFollow" index="0"]
-
-position = Vector2( 2.81057, -0.0167134 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 16 )
 _sections_unfolded = [ "Transform" ]
 
 [node name="WhiteFollow" type="PathFollow2D" parent="Path" index="4"]
@@ -1722,12 +1709,13 @@ loop = true
 lookahead = 4.0
 _sections_unfolded = [ "Transform" ]
 
-[node name="WhiteRacer" type="Sprite" parent="Path/WhiteFollow" index="0"]
+[node name="LoserMenu" parent="." index="45" instance=ExtResource( 18 )]
 
-position = Vector2( -0.279724, 1.16418 )
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 17 )
-_sections_unfolded = [ "Transform" ]
+visible = false
+
+[node name="WinnerMenu" parent="." index="46" instance=ExtResource( 18 )]
+
+visible = false
 
 [connection signal="pressed" from="BlueSprite/BlueBettingButton" to="." method="_on_BlueBettingButton_pressed"]
 
@@ -1739,8 +1727,16 @@ _sections_unfolded = [ "Transform" ]
 
 [connection signal="pressed" from="WhiteSprite/WhiteBettingButton" to="." method="_on_WhiteBettingButton_pressed"]
 
+[connection signal="pressed" from="WinnerBetButton" to="." method="_on_WinnerBetButton_pressed"]
+
+[connection signal="pressed" from="LoserBetButton" to="." method="_on_LoserBetButton_pressed"]
+
 [connection signal="pressed" from="MoveButton" to="." method="_on_MoveButton_pressed"]
 
 [connection signal="toggled" from="DesertTileButton" to="." method="_on_DesertTileButton_toggled"]
+
+[connection signal="color_chosen" from="LoserMenu" to="." method="_on_LoserMenu_color_chosen"]
+
+[connection signal="color_chosen" from="WinnerMenu" to="." method="_on_WinnerMenu_color_chosen"]
 
 

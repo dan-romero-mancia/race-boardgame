@@ -5,6 +5,10 @@ class DesertTile:
 	var location # Tile number on the track
 	var value # Either -1 or +1
 
+class OverallCard:
+	var player
+	var color
+
 const TILE_SIZE = 128
 const MAX_TILES = 16
 const RACER_SIZE = 32
@@ -59,6 +63,9 @@ var track_tiles = []
 var choose_desert_tile = false
 var can_place_tile = true
 var desert_tiles_on_board = []
+
+var overall_winner = []
+var overall_loser = []
 
 func _ready():
 	# Initialize betting cards
@@ -136,6 +143,8 @@ func _ready():
 	for button in get_tree().get_nodes_in_group("DesertTile"):
 		button.connect("pressed", self, "_desert_tile_selected", [button, button_num])
 		button_num += 1
+	$LoserMenu.set_title_label(" Loser")
+	$WinnerMenu.set_title_label(" Winner")
 
 func _on_BlueBettingButton_pressed():
 	if my_turn:
@@ -277,7 +286,7 @@ remote func set_betting_card_to_player(color, player_name):
 
 # Add a message to the message itemlist
 func add_message(text):
-	$MessageScrollBar/MessageList.add_item(text, null, true)
+	$MessageList.add_item(text, null, true)
 
 # When the move button is pressed; add 1 to your move cards and move a racer to a new location
 # The racer is chosen randomly and is then moved 1-3 spaces randomly
@@ -345,7 +354,6 @@ remote func move_racer(random_racer, spaces_optional):
 			self.racer_positions[r] += spaces
 	
 	animate_movement(racers_to_move, self.racer_positions[random_racer])
-	## Check for Desert tiles here ##
 	check_desert_tiles(racers_to_move, self.racer_positions[random_racer])
 	
 	for r in racers_to_move:
@@ -384,6 +392,7 @@ func animate_movement(racers, dest_space):
 	var tween = get_node("Tween")
 	var new_racer_pos
 	
+	var racer_offset = self.track_tiles[dest_space].size() # Used to determine the vertical offset of a racer when stacking them
 	for r in racers:
 		# Get the current racer's color as text. Will be used to get the correct racer sprite
 		var racer_color = ""
@@ -399,19 +408,20 @@ func animate_movement(racers, dest_space):
 			RACER.white:
 				racer_color = "White"
 		
-#		var racer_name = racer_color + "Racer"
-#		var racer_sprite = get_node(racer_name)
-#		var new_x_pos = float(tile_position.x)
-#		var new_y_pos = float(tile_position.y) + RACER_SIZE - (RACER_SIZE * track_tiles[dest_space].size())
-#		var new_racer_position = Vector2(new_x_pos, new_y_pos)
+		var racer_name = racer_color + "Racer"
+		var racer_sprite = get_node(racer_name)
+		var new_x_pos = float(tile_position.x)
+		var new_y_pos = float(tile_position.y) + RACER_SIZE - (RACER_SIZE * racer_offset)
+		var new_racer_position = Vector2(new_x_pos, new_y_pos)
+		racer_offset += 1
 		
-		var follow_name = racer_color + "Follow"
-		var follow_node = get_node("Path/" + follow_name)
-		var new_offset = follow_node.unit_offset+(PATH_SPACE*(dest_space-1))/1000
+#		var follow_name = racer_color + "Follow"
+#		var follow_node = get_node("Path/" + follow_name)
+#		var new_offset = follow_node.unit_offset+(PATH_SPACE*(dest_space-1))/1000
 		## EDIT follow_node for correct offset when another player is on the same tile
 		
-		tween.interpolate_property(follow_node, "unit_offset", follow_node.unit_offset, new_offset, 1,Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
-		#tween.interpolate_property(racer_sprite, "position", racer_sprite.position, new_racer_position, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
+#		tween.interpolate_property(follow_node, "unit_offset", follow_node.unit_offset, new_offset, 1,Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
+		tween.interpolate_property(racer_sprite, "position", racer_sprite.position, new_racer_position, 1, Tween.TRANS_LINEAR, Tween.EASE_OUT_IN)
 		tween.start()
 
 # Get the racer on a tile and any racers that are on top of it in one array
@@ -420,14 +430,17 @@ func get_racers_on_tile(tile_number, racer_color):
 	var racer_index = racers.find(racer_color)
 	
 	# If the racer is last in the array, it is at the top, it can be returned in a list with just itself
-	if racer_index == racers.size()-1:
-		return [track_tiles.pop_back()]
+	if racers.size() == 0 or racer_color == racers[racers.size()-1]:
+		racers.erase(racer_color)
+		return [racer_color]
 	# Otherwise return a list with the racer and all other racers on top of it
 	else:
 		var racers_to_move = []
-		for i in range(racer_index, track_tiles.size()):
+		for i in range(racer_index, racers.size()):
 			racers_to_move.append(racers[i])
-			racers.erase(racers[i])
+		
+		for i in range(racer_index, racers.size()):
+			racers.pop_back()
 			
 		return racers_to_move
 
@@ -472,6 +485,8 @@ func signal_move_card_taken(player_name):
 		if p.player_name != globals.player_name:
 			rpc_id(p.network_id, "update_player_move_cards", player_name)
 
+# When a tile is selected to place a desert tile on, check if there's a desert tile is already there or in any adjacent tiles.
+# If it is a valid spot, place the tile there and tell the other players that a desert tile was place there.
 func _desert_tile_selected(button, button_num):
 	if my_turn and choose_desert_tile and can_place_tile:
 		if check_adjacent_desert_tiles(button_num):
@@ -493,6 +508,8 @@ func _desert_tile_selected(button, button_num):
 	else:
 		add_message("You can't place a tile now")
 
+# Add a new DesertTile to the list of tiles on the board.
+# Change the text for the button at the tile_num to say what was placed there.
 remote func place_desert_tile(player_name, tile_num, value):
 	var new_tile = DesertTile.new()
 	new_tile.player = player_name
@@ -504,16 +521,19 @@ remote func place_desert_tile(player_name, tile_num, value):
 	space_button.text = player_name + str(value) + " Desert Tile"
 	add_message(player_name + " placed a Desert Tile")
 
+# When the desert button is pressed (which will toggle in this case) toggle the choose_desert_tile flag.
+# This will allow the player to choose a space on the board to place the tile.
 func _on_DesertTileButton_pressed():
 	if self.my_turn:
 		self.choose_desert_tile = !self.choose_desert_tile
 		if self.choose_desert_tile:
 			add_message("Choose a tile")
-		else:
-			print("Can't place")
 
 func _on_DesertTileButton_toggled(button_pressed):
-	self.choose_desert_tile = button_pressed
+	if self.my_turn:
+		self.choose_desert_tile = button_pressed
+		if self.choose_desert_tile:
+			add_message("Choose a space")
 
 # Check the adjacent tiles if there are any desert tiles
 # If there are no adjacent desert tiles return true
@@ -532,10 +552,10 @@ func signal_desert_tile_placed(player_name, tile_num, value):
 # Begin end of leg phase. Calculate winnings and loses based on racers positions.
 # Give money to the the players based on what happened during the leg and update the Player nodes
 remote func end_of_leg():
-	print("End of Leg")
 	give_move_card_money()
-	give_betting_card_money() ## TODO Test
+	give_betting_card_money() 
 	reset_leg()
+	update_money_amounts()
 
 # Add the amount of move cards a player used during a leg to their money amount.
 # 1 Move Card = $1
@@ -599,6 +619,14 @@ func reset_leg():
 	
 	self.dice = [RACER.blue, RACER.green, RACER.orange, RACER.yellow, RACER.white]
 	var desert_tiles_on_board = []
+	$DesertTileButton.disabled = false
+	for button in get_tree().get_nodes_in_group("DesertTile"):
+		button.text = ""
+
+func update_money_amounts():
+	for p in globals.players:
+		var player_node = get_node("Players/" + str(p.network_id))
+		player_node.set_money_amount(p.money_amount)
 
 # Signal to the other players that the current leg has finished
 func signal_end_of_leg():
@@ -606,10 +634,10 @@ func signal_end_of_leg():
 		if p.player_name != globals.player_name:
 			rpc_id(p.network_id, "end_of_leg")
 
-# Send the player to start the next leg to all the other players
+# Send the player who will start the next leg to all the other players
 func send_next_leg_player_turn():
 	self.player_leg_turn += 1
-	if self.player_leg_turn == globals.players.size()-1:
+	if self.player_leg_turn == globals.players.size():
 		self.player_leg_turn = 0
 	
 	set_leg_player_turn(self.player_leg_turn)
@@ -618,6 +646,7 @@ func send_next_leg_player_turn():
 		if p.player_name != globals.player_name:
 			rpc_id(p.network_id, "set_leg_player_turn", self.player_leg_turn)
 
+# Set the player_leg_turn variable, set my_turn flag based on player_leg_turn
 remote func set_leg_player_turn(turn_num):
 	self.player_leg_turn = turn_num
 	self.my_turn = globals.players[turn_num].player_name == globals.player_name
@@ -625,3 +654,82 @@ remote func set_leg_player_turn(turn_num):
 		add_message("It's your turn now!")
 	else:
 		add_message("It's " + globals.players[player_turn_index].player_name + " turn now!")
+	
+	set_leg_player_turn_sprite(globals.players[turn_num])
+
+# Show the sprite for the leg starter in the appropriate player node
+func set_leg_player_turn_sprite(player):
+	for p in globals.players:
+		var player_node = get_node("Players/" + str(p.network_id))
+		if p.player_name == player.player_name:
+			player_node.set_leg_starter(true)
+		else:
+			player_node.set_leg_starter(false)
+
+# Create a new OverallCard and add it to the overall loser list if it doesn't already exist in either winner or loser lists.
+func _on_LoserMenu_color_chosen(color):
+	if my_turn:
+		var card = OverallCard.new()
+		card.player = globals.player_name
+		card.color = color
+		if !check_overall_duplicates(card):
+			self.overall_loser.append(card)
+			signal_overall_picked(card, "set_overall_loser")
+			send_next_player_turn()
+
+# Create a new OverallCard and add it to the overall winner list if it doesn't already exist in either winner or loser lists.
+func _on_WinnerMenu_color_chosen(color):
+	if my_turn:
+		var card = OverallCard.new()
+		card.player = globals.player_name
+		card.color = color
+		if !check_overall_duplicates(card):
+			self.overall_winner.append(card)
+			signal_overall_picked(card, "set_overall_winner")
+			send_next_player_turn()
+
+# Check both overall winner and loser lists if a card exists in them.
+# Returns true if it is found in either of the lists
+func check_overall_duplicates(card):
+	var duplicate = false
+	for c in self.overall_loser:
+		if c.player == card.player and c.color == card.color:
+			duplicate = true
+	for c in self.overall_winner:
+		if c.player == card.player and c.color == card.color:
+			duplicate = true
+	return duplicate
+
+# Show the Overall winner pop up menu when the button is pressed
+func _on_WinnerBetButton_pressed():
+	if my_turn:
+		$WinnerMenu.show()
+
+# Show the Overall loser pop up menu when the button is pressed
+func _on_LoserBetButton_pressed():
+	if my_turn:
+		$LoserMenu.show()
+
+# Signal to the other players that a overall bet was placed.
+func signal_overall_picked(card, func_name):
+	for p in globals.players:
+		if p.player_name != globals.player_name:
+			rpc_id(p.network_id, func_name, card.player, card.color)
+
+# Add a new Overall card to the overall loser list.
+remote func set_overall_loser(player, color):
+	var card = OverallCard.new()
+	card.player = player
+	card.color = color
+	self.overall_loser.append(card)
+	
+	add_message(player + " bet on a overall loser.")
+
+# Add a new Overall card to the overall winner list.
+remote func set_overall_winner(player, color):
+	var card = OverallCard.new()
+	card.player = player
+	card.color = color
+	self.overall_winner.append(card)
+	
+	add_message(player + " bet on a overall winner.")

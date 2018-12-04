@@ -100,14 +100,16 @@ func pre_config_game():
 		player.set_name(str(p.network_id))
 		get_node("/root/Board/Players").add_child(player)
 		player.set_player_name(p.player_name)
-		player.set_money_amount(0)
+		player.set_money_amount(3)
 		player.set_player_number(p.player_number)
-		set_player_position(player, index)
+		player.set_leg_starter(false)
 		
+		set_player_position(player, index)
 		index += 1
 	
 	if globals.players[0].player_name == globals.player_name:
 		board.my_turn = true
+	board.set_leg_player_turn_sprite(globals.players[0])
 	# When finished notify the server.
 	if !get_tree().is_network_server():
 		rpc_id(1, "done_preconfig", get_tree().get_network_unique_id())
